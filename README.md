@@ -1,0 +1,1 @@
+## This is an Instagram-like app especailly for corporate users, where they can share post and acknowledge each other.
