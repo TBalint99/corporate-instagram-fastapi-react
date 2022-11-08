@@ -8,6 +8,7 @@ class DbUser(Base):
     username = Column(String)
     email = Column(String)
     password = Column(String)
+    image_url = Column(String)
     items = relationship('DbPost', back_populates='user')
 
 class DbPost(Base):
@@ -20,6 +21,7 @@ class DbPost(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('DbUser', back_populates='items')
     comments = relationship('DbComment', back_populates='post')
+    likes = relationship('DbLike', back_populates='post')
 
 class DbComment(Base):
     __tablename__ = 'comments'

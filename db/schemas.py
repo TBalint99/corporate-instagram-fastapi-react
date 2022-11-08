@@ -6,10 +6,12 @@ class UserBase(BaseModel):
     username: str
     email: str
     password: str
+    image_url: str
 
 class UserDisplay(BaseModel):
     username: str
     email: str
+    image_url: str
     class Config():
         orm_mode = True 
 
@@ -19,7 +21,7 @@ class PostBase(BaseModel):
     caption: str
     creator_id: int
 
-# for PostDisplay
+# For PostDisplay
 class User(BaseModel):
     username: str
     class Config():
@@ -33,6 +35,7 @@ class Comment(BaseModel):
     class Config():
         orm_mode = True 
 
+# For PostDisplay
 class Likes(BaseModel):
     username: str
     timestamp: datetime
@@ -59,4 +62,8 @@ class UserAuth(BaseModel):
 class CommentBase(BaseModel):
     username: str
     text: str
+    post_id: int
+
+class LikeBase(BaseModel):
+    username: str
     post_id: int
