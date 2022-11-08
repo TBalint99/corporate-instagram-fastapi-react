@@ -7,3 +7,5 @@ cloudinary
 python-multipart
 aiofiles
 python-jose
+alembic
+python-dotenv
