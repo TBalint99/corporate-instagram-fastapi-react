@@ -34,7 +34,7 @@ def get_my_posts(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.post('/upload_image')
-def upload_image(image: UploadFile = File(...), current_user: UserAuth = Depends(get_current_user)):
+def upload_image(image: UploadFile = File(...)):
     # upload to cludinary
     result = uploader.upload(image.file)
     url = result.get("url")
