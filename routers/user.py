@@ -13,3 +13,5 @@ router = APIRouter(
 @router.post('/sign_up', response_model=UserDisplay)
 def create_use(request: UserBase, db: Session = Depends(get_db)):
     return db_user.create_user(db, request)
+
+# Get a user by username
