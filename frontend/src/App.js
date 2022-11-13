@@ -14,14 +14,11 @@ function App() {
     try {
       const res = await fetch(BASE_URL + 'post/all')
       const data = await res.json()
-      setPost(data)
+      const sortedData = await data.sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+      setPost(sortedData)
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const getUsers = async () => {
-    
   }
 
   useEffect(() => {
