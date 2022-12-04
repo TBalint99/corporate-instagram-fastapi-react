@@ -3,6 +3,7 @@ import Layout from './Components/Layout';
 import { motion } from "framer-motion"
 import { useEffect, useState } from 'react';
 import Post from './Components/Post';
+import PostUpload from './Components/PostUpload';
 
 const BASE_URL = 'http://localhost:8000/'
 
@@ -26,7 +27,10 @@ function App() {
   },[])
 
   return (
-    <Layout>
+    <Layout BASE_URL={BASE_URL}>
+      <PostUpload
+        BASE_URL={BASE_URL}
+      />
       <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
