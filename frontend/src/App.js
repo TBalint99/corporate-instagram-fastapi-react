@@ -1,15 +1,18 @@
 import './App.css';
 import Layout from './Components/Layout';
 import { motion } from "framer-motion"
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Post from './Components/Post';
 import PostUpload from './Components/PostUpload';
+import { User } from './Utils/User';
 
 const BASE_URL = 'http://localhost:8000/'
 
 function App() {
 
   const [post, setPost] = useState([])
+  const { state } = useContext(User)
+  const { userAuth, userAuthType } = state
 
   const getPosts = async () => {
     try {
@@ -44,6 +47,10 @@ function App() {
           user={item.user.username}
           timestamp={item.timestamp}
           comments={item.comments}
+          postId={item.id}
+          BASE_URL={BASE_URL}
+          userAuth={userAuth}
+          userAuthType={userAuthType}
         />
       ))}</motion.div>
     </Layout>
