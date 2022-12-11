@@ -5,15 +5,16 @@ export const User = createContext()
 const initialState = {
     userAuth: localStorage.getItem('authToken') ? localStorage.getItem('authToken') : null,
     userAuthType: localStorage.getItem('authTokenType') ? localStorage.getItem('authTokenType') : null,
-    userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : null
+    userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : null,
+    username: localStorage.getItem('username') ? localStorage.getItem('username') : null
 }
 
 function reducer(state, action) {
     switch (action.type) {
         case 'USER_LOGIN':
-            return { ...state, userAuth: action.payload.access_token, userAuthType: action.payload.token_type, userId: action.payload.user_id }
+            return { ...state, userAuth: action.payload.access_token, userAuthType: action.payload.token_type, userId: action.payload.user_id, username: action.payload.username }
         case 'USER_LOGOUT':
-            return { ...state, userAuth: null, userAuthType: null, userId: null, new_comment: null }
+            return { ...state, userAuth: null, userAuthType: null, userId: null, username: null, new_comment: null }
         default:
             break;
     }

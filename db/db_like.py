@@ -5,7 +5,7 @@ from db.models import DbLike
 from db.schemas import LikeBase
 
 def like(db: Session, request: LikeBase):
-    like = db.query(DbLike).filter(DbLike.username == request.username).first()
+    like = db.query(DbLike).filter(DbLike.username == request.username).filter(DbLike.post_id == request.post_id).first()
     if not like: 
         new_like = DbLike(
             username = request.username,
@@ -20,7 +20,7 @@ def like(db: Session, request: LikeBase):
         return 'Already liked'
 
 def dislike(db: Session, request: LikeBase):
-    like = db.query(DbLike).filter(DbLike.username == request.username).first()
+    like = db.query(DbLike).filter(DbLike.username == request.username).filter(DbLike.post_id == request.post_id).first()
     if not like:
         return 'You have hot liked this post yet.'
     db.delete(like)
@@ -29,4 +29,4 @@ def dislike(db: Session, request: LikeBase):
 
 # Get all likes that belong to the post
 def get_all_likes(db: Session, post_id: int):
-    return db.query(DbLike).filter(DbLike.id == post_id).all()
+    return db.query(DbLike).filter(DbLike.post_id == post_id).all()

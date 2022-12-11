@@ -12,7 +12,7 @@ function App() {
 
   const [post, setPost] = useState([])
   const { state } = useContext(User)
-  const { userAuth, userAuthType } = state
+  const { userAuth, userAuthType, username } = state
 
   const getPosts = async () => {
     try {
@@ -51,6 +51,7 @@ function App() {
           BASE_URL={BASE_URL}
           userAuth={userAuth}
           userAuthType={userAuthType}
+          username={username}
         />
       ))}</motion.div>
     </Layout>

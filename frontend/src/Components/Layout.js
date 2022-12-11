@@ -38,14 +38,16 @@ export default function Layout(props) {
             const response = await fetch(props.BASE_URL + 'login', requestOptions)
             const data = await response.json()
             if (response.ok) {
-                console.log(data)
+                // console.log(data)
                 setShowLoginModal(false)
                 setAuthToken(data.access_token)
                 setAuthErrorMessage(null)
                 localStorage.setItem('authToken', data.access_token)
                 localStorage.setItem('authTokenType', data.token_type)
                 localStorage.setItem('userId', data.user_id)
+                localStorage.setItem('username', data.username)
                 dispatch({ type: 'USER_LOGIN', payload: data })
+                window.location.reload()
                 return data
             }
             throw response
@@ -90,9 +92,12 @@ export default function Layout(props) {
 
     const logOut = async () => {
         localStorage.removeItem('authToken')
+        localStorage.removeItem('authTokenType')
+        localStorage.removeItem('userId')
+        localStorage.removeItem('username')
         setAuthToken(null)
         dispatch({ type: 'USER_LOGOUT' })
-        //window.location.reload()
+        window.location.reload()
     }
 
     return (

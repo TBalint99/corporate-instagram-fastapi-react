@@ -1,23 +1,100 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoIosMore } from "react-icons/io";
 import { FcLikePlaceholder, FcLike } from "react-icons/fc";
 import { FaRegComment } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Comment from './Comment';
+import { motion } from "framer-motion"
 
 
-export default function Post({ img_url, caption, user, timestamp, comments, postId, BASE_URL, userAuth, userAuthType }) {
+export default function Post({ img_url, caption, user, timestamp, comments, postId, BASE_URL, userAuth, userAuthType, username }) {
 
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [commentInterface, setCommentInterface] = useState(false)
-    
+    const [likes, setLikes] = useState([])
+    const [userLike, setUserLike] = useState(false)
+    const [likesCount, setLikesCount] = useState(0)
+
     const formatDate = (dateString) => {
         const options = { year: "numeric", month: "long", day: "numeric"}
         return new Date(dateString).toLocaleDateString(undefined, options)
     }
+
+    const getLikes = async (postId) => {
+        try {
+            const response = await fetch(BASE_URL + `like/all_likes/${postId}`)
+            const data = await response.json()
+            setLikes(data);
+            const like = data.filter((item) => item.username === username)
+            if (like.length !== 0 && userAuth) {
+                setUserLike(true)
+            }
+            setLikesCount(Object.keys(data).length)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getLikes(postId)
+    },[])
+
+    const handleLike = async () => {
+
+        if (userAuth) {
+            const json_string = JSON.stringify({
+                'username': username,
+                'post_id': postId
+            })
     
-    //console.log(BASE_URL + `post/delete/${postId}`);
+            const requestOptions = {
+                method: 'POST',
+                headers: new Headers({
+                  'Authorization': userAuthType + ' ' + userAuth,
+                  'Content-Type': 'application/json'
+                }),
+                body: json_string
+            }
+    
+            try {
+                
+                const response = await fetch(BASE_URL + 'like/like', requestOptions)
+                const data = await response.json()
+                setUserLike(true)
+                setLikesCount(prevCount => prevCount + 1)
+            } catch (error) {
+                console.log(error);
+            }  
+        }
+    }
+
+    const handleDislike = async () => {
+
+        const json_string = JSON.stringify({
+            'username': username,
+            'post_id': postId
+        })
+
+        const requestOptions = {
+            method: 'DELETE',
+            headers: new Headers({
+              'Authorization': userAuthType + ' ' + userAuth,
+              'Content-Type': 'application/json'
+            }),
+            body: json_string
+        }
+
+        try {
+            
+            const response = await fetch(BASE_URL + 'like/dislike', requestOptions)
+            const data = await response.json()
+            setUserLike(false)
+            setLikesCount(prevCount => prevCount - 1)
+        } catch (error) {
+            console.log(error);
+        }  
+    }
 
     const deletePost = async (postId) => {
 
@@ -78,7 +155,31 @@ export default function Post({ img_url, caption, user, timestamp, comments, post
                 />
             </div>
             <div className='flex felx-row text-2xl font-bold my-2'>
-                <FcLikePlaceholder className='ml-3 hover:cursor-pointer' />
+                {
+                    userLike === true ?
+                    <motion.button
+                        onClick={handleDislike}
+                        type="button"
+                        whileHover={{
+                            scale: 1.3,
+                            transition: { duration: 0.1 },
+                        }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <FcLike className='ml-3 hover:cursor-pointer' />
+                    </motion.button> :
+                    <motion.button
+                        onClick={handleLike}
+                        type="button"
+                        whileHover={{
+                            scale: 1.3,
+                            transition: { duration: 0.1 },
+                        }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <FcLikePlaceholder className='ml-3 hover:cursor-pointer' />
+                    </motion.button>
+                }
                 <FaRegComment
                     className='ml-3 hover:cursor-pointer'
                     onClick={() => {
@@ -89,13 +190,16 @@ export default function Post({ img_url, caption, user, timestamp, comments, post
                     }
                 />
             </div>
+            {
+                likesCount !== 0 && <p className='mx-3 text-md font-semibold'>{likesCount} likes</p> 
+            }
             <div className='flex flex-col mx-3 text-md'>
                 <p className='font-semibold'>{user}</p>
                 <p className='my-1'>{caption}</p>
             </div>
             <p className='mx-3 font-thin text-sm text-gray-500'>{formatDate(timestamp)}</p>
             {
-                <Comment user={user} postId={postId} BASE_URL={BASE_URL} userAuthType={userAuthType} userAuth={userAuth} comments={comments} commentInterface={commentInterface} />
+                <Comment username={username} postId={postId} BASE_URL={BASE_URL} userAuthType={userAuthType} userAuth={userAuth} comments={comments} commentInterface={commentInterface} />
             }
         </div>
     )

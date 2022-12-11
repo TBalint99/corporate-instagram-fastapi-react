@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion } from "framer-motion"
 import { FaPaperPlane } from "react-icons/fa";
 
-export default function Comment({ user, postId, BASE_URL, userAuthType, userAuth, comments, commentInterface }) {
+export default function Comment({ username, postId, BASE_URL, userAuthType, userAuth, comments, commentInterface }) {
 
     const [newComment, setNewComment] = useState('')
     const [commentState, setCommentState] = useState([])
@@ -18,7 +18,7 @@ export default function Comment({ user, postId, BASE_URL, userAuthType, userAuth
         e?.preventDefault()
         
         const json_string = JSON.stringify({
-            'username': user,
+            'username': username,
             'text': newComment,
             'post_id': postId
         })
