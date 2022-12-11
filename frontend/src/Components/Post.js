@@ -16,8 +16,8 @@ export default function Post({ img_url, caption, user, timestamp, comments, post
         const options = { year: "numeric", month: "long", day: "numeric"}
         return new Date(dateString).toLocaleDateString(undefined, options)
     }
-
-    console.log(BASE_URL + `post/delete/${postId}`);
+    
+    //console.log(BASE_URL + `post/delete/${postId}`);
 
     const deletePost = async (postId) => {
 
@@ -94,15 +94,8 @@ export default function Post({ img_url, caption, user, timestamp, comments, post
                 <p className='my-1'>{caption}</p>
             </div>
             <p className='mx-3 font-thin text-sm text-gray-500'>{formatDate(timestamp)}</p>
-            <div className='my-2 border-y border-gray-200'>
-                {
-                    comments.map(item => (
-                        <p key={(Math.random() + 1).toString(36).substring(7)} className='mx-3 text-md font-normal'><span className='font-semibold'>{item.username}</span> {item.text}</p>
-                    ))
-                }
-            </div>
             {
-                commentInterface && <Comment />
+                <Comment user={user} postId={postId} BASE_URL={BASE_URL} userAuthType={userAuthType} userAuth={userAuth} comments={comments} commentInterface={commentInterface} />
             }
         </div>
     )

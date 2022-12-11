@@ -13,7 +13,7 @@ function reducer(state, action) {
         case 'USER_LOGIN':
             return { ...state, userAuth: action.payload.access_token, userAuthType: action.payload.token_type, userId: action.payload.user_id }
         case 'USER_LOGOUT':
-            return { ...state, userAuth: null, userAuthType: null, userId: null }
+            return { ...state, userAuth: null, userAuthType: null, userId: null, new_comment: null }
         default:
             break;
     }
